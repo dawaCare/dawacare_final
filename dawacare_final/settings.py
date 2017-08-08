@@ -27,7 +27,7 @@ SECRET_KEY = 'e59gfi44wo_bx907nh8@iklscrt2o8o*%z61*!dg5_d@m4mkop'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['localhost', 'dawa-staging.herokuapp.com']
 
 
 # Application definition
