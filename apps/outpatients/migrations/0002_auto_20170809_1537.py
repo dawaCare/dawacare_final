@@ -421,4 +421,19 @@ class Migration(migrations.Migration):
             name='quarter',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='outpatients.Quarter'),
         ),
+        migrations.AddField(
+            model_name='newoutpatient',
+            name='allergies',
+            field=models.ManyToManyField(blank=True, null=True, to='outpatients.Allergy'),
+        ),
+        migrations.AddField(
+            model_name='newoutpatient',
+            name='diagnoses',
+            field=models.ManyToManyField(blank=True, null=True, to='outpatients.Diagnosis'),
+        ),
+        migrations.AddField(
+            model_name='newoutpatient',
+            name='medications',
+            field=models.ManyToManyField(null=True, through='outpatients.PrescribedMed', to='outpatients.Medication'),
+        ),
     ]
