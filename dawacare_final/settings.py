@@ -33,6 +33,8 @@ ALLOWED_HOSTS = ['localhost', 'dawa-staging.herokuapp.com', 'dawa-prod.herokuapp
 # Application definition
 
 INSTALLED_APPS = [
+    'apps.outpatients',
+    'import_export',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
