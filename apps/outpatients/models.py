@@ -3,7 +3,7 @@ from django.db import models
 from django.db.models import fields
 from django.utils.encoding import python_2_unicode_compatible
 
-from apps.locations.models import Address
+
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
@@ -211,7 +211,7 @@ class NewOutpatient(TrackedModel, models.Model):
         return self.surname + ', ' + self.first_name
 
     class Meta:
-        db_table = 'outpatients'
+        db_table = 'newoutpatients'
 
 class EmergencyContact(models.Model):
     first_name = models.CharField(max_length=30)
