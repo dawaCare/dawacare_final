@@ -25,9 +25,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+# DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'dawa-prod.herokuapp.com']
+ALLOWED_HOSTS = ['localhost', 'dawa-staging.herokuapp.com', 'dawa-prod.herokuapp.com']
 
 
 # Application definition
