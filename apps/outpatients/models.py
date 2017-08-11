@@ -335,7 +335,6 @@ class AppointmentReminder(models.Model):
     date = models.DateField()
 
 
-
     class Meta:
         db_table = 'appt_reminders'
 
