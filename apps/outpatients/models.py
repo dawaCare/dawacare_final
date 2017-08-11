@@ -4,11 +4,12 @@ from django.db.models import fields
 from django.utils.encoding import python_2_unicode_compatible
 import datetime
 
-
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
+
+from apps.outpatients import choices
 
 alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')
 phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
@@ -101,8 +102,9 @@ class Certification(models.Model):
 class Doctor(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    main_phone = models.CharField(max_length=10)
-    email = models.EmailField()
+    main_phone = models.CharField(validators=[phone_regex], max_length=15, blank=True)
+    alt_phone = models.CharField(validators=[phone_regex], blank=True, max_length=15)
+    email = models.EmailField(blank=True)
     address1 = models.CharField("Address Line 1", max_length=1024, blank=True)
     address2 = models.CharField("Address Line 2", max_length=1024, blank=True)
     district = models.ForeignKey(District, blank=True, null=True)
@@ -110,7 +112,7 @@ class Doctor(models.Model):
     city = models.ForeignKey(City, blank=True, null=True)
     quarter = models.ForeignKey(Quarter, blank=True, null=True)
 
-    certifications = models.ManyToManyField(Certification)
+    certifications = models.ManyToManyField(Certification, blank=True)
     specialties = models.ManyToManyField(Specialty)
 
     class Meta:
@@ -130,7 +132,8 @@ class Department(models.Model):
 
 class Facility(models.Model):
     name = models.CharField(max_length=50)
-    phone = models.CharField(max_length=10, blank=True)
+    main_phone = models.CharField(validators=[phone_regex], max_length=15)
+    alt_phone = models.CharField(validators=[phone_regex], blank=True, max_length=15)
     address1 = models.CharField("Address Line 1", max_length=1024, blank=True)
     address2 = models.CharField("Address Line 2", max_length=1024, blank=True)
     district = models.ForeignKey(District, blank=True, null=True)
@@ -267,18 +270,18 @@ class Outpatient(models.Model):
 class EmergencyContact(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    main_phone = models.CharField(max_length=10)
-    alt_phone = models.CharField(max_length=10, blank=True)
-    RELATIONSHIP_CHOICES = (
-        ('Sib', 'Sibling'),
-        ('M', 'Mother'),
-        ('F', 'Father'),
-        ('C', 'Cousin'),
-        ('F', 'Friend'),
-        ('D', 'Daughter'),
-        ('S', 'Son'),
-    )
-    relationship = models.CharField(max_length=10, choices=RELATIONSHIP_CHOICES, blank=True)
+    main_phone = models.CharField(validators=[phone_regex], max_length=15)
+    alt_phone = models.CharField(validators=[phone_regex], blank=True, max_length=15)
+    # RELATIONSHIP_CHOICES = (
+    #     ('Sib', 'Sibling'),
+    #     ('M', 'Mother'),
+    #     ('F', 'Father'),
+    #     ('C', 'Cousin'),
+    #     ('F', 'Friend'),
+    #     ('D', 'Daughter'),
+    #     ('S', 'Son'),
+    # )
+    relationship = models.CharField(max_length=10, choices=choices.RELATIONSHIP_CHOICES, blank=True)
     address1 = models.CharField("Address Line 1", max_length=1024, blank=True)
     address2 = models.CharField("Address Line 2", max_length=1024, blank=True)
     district = models.ForeignKey(District, blank=True, null=True)
@@ -298,10 +301,9 @@ class EmergencyContact(models.Model):
 class PrescribedMed(models.Model):
     medication = models.ForeignKey(Medication, related_name='prescription')
     outpatient = models.ForeignKey(Outpatient, related_name='prescription')
-    dosage_num = models.IntegerField()
-    route = models.CharField(max_length=10)
-    frequency = models.CharField(max_length=10)
-    dosage_unit = models.CharField(max_length=10)
+    route = models.CharField(max_length=10, choices=choices.ROUTES_CHOICES)
+    frequency = models.CharField(max_length=10, choices=choices.FREQUENCY_CHOICES)
+    dosage = models.CharField(max_length=10)
     end_date = models.DateField(null=True)
 
 
@@ -318,6 +320,7 @@ class Visit(models.Model):
     outpatient = models.ForeignKey(Outpatient)
     doctor = models.ForeignKey(Doctor)
     facility = models.ForeignKey(Facility)
+    department = models.ForeignKey(Department, null=True)
 
     class Meta:
         db_table = 'visits'
