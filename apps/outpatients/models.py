@@ -2,11 +2,23 @@ from __future__ import unicode_literals
 from django.db import models
 from django.db.models import fields
 from django.utils.encoding import python_2_unicode_compatible
+import datetime
 
 
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
+from django.core.validators import RegexValidator
+
+alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')
+phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+
+
+# class ConvertingDateTimeField(models.DateTimeField):
+#
+#     def get_prep_value(self, value):
+#         return str(datetime.strptime(value, '%d-%m-%Y'))
+
 
 class Country(models.Model):
     country = models.CharField(max_length=70)
@@ -54,25 +66,20 @@ class Address(models.Model):
 
 
 
-class TrackedModel(models.Model):
-    # these fields are set automatically from REST requests via
-    # updates from dict and the getter, setter properties, where available
-    # (from the update from dict mixin)
-    created = models.DateTimeField(blank=True, null=True)
-    updated = models.DateTimeField(blank=True, null=True)
-    created_by = models.ForeignKey(
-        User, blank=True, null=True,
-        # related_name="created_%(app_label)s_%(class)s_subrecords"
-        related_name='created_by'
-    )
-    updated_by = models.ForeignKey(
-        User, blank=True, null=True,
-        # related_name="updated_%(app_label)s_%(class)s_subrecords"
-        related_name='updated_by'
-    )
-
-    class Meta:
-        abstract = True
+# class TrackedModel(models.Model):
+#     created = models.DateTimeField(blank=True, null=True)
+#     updated = models.DateTimeField(blank=True, null=True)
+#     created_by = models.ForeignKey(
+#         User, blank=True, null=True,
+#         related_name='created_by'
+#     )
+#     updated_by = models.ForeignKey(
+#         User, blank=True, null=True,
+#         related_name='updated_by'
+#     )
+#
+#     class Meta:
+#         abstract = True
 
 
 class Specialty(models.Model):
@@ -177,9 +184,9 @@ class Medication(models.Model):
         db_table = 'medications'
 
 
-class NewOutpatient(TrackedModel, models.Model):
-    first_name = models.CharField(max_length=255, blank=True)
-    surname = models.CharField(max_length=255, blank=True)
+class Outpatient(models.Model):
+    first_name = models.CharField(max_length=255, blank=True, validators=[alphanumeric])
+    surname = models.CharField(max_length=255, validators=[alphanumeric])
     middle_name = models.CharField(max_length=255, blank=True)
     date_of_birth = models.DateField(null=True, blank=True, verbose_name=("Date of Birth"))
     GENDER_CHOICES = (
@@ -187,11 +194,10 @@ class NewOutpatient(TrackedModel, models.Model):
         ('F', 'Female'),
     )
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
-    idd = models.PositiveIntegerField(default=237)
-    main_phone = models.CharField(max_length=10)
-    alt_phone = models.CharField(max_length=10, blank=True, default="N/A")
+    main_phone = models.CharField(validators=[phone_regex], max_length=15)
+    alt_phone = models.CharField(validators=[phone_regex], blank=True, max_length=15)
     occupation = models.CharField(max_length=30, blank=True)
-    address = models.ForeignKey(Address, blank=True)
+    address = models.ForeignKey(Address, blank=True, null=True)
     pregnant = models.BooleanField(default=False)
     signed_consent_for_roi = models.BooleanField(default=True)
     reason_for_not_signing_consent = models.TextField(blank=True)
@@ -202,16 +208,41 @@ class NewOutpatient(TrackedModel, models.Model):
     issues_with_taking_medication = models.NullBooleanField()
 
 
-    # diagnoses = models.ManyToManyField(Diagnosis, null=True, blank=True)
-    # allergies = models.ManyToManyField(Allergy, null=True, blank=True)
-    # medications = models.ManyToManyField(Medication, through="PrescribedMed", null=True)
+    diagnoses = models.ManyToManyField(Diagnosis, blank=True)
+    allergies = models.ManyToManyField(Allergy, blank=True)
+    medications = models.ManyToManyField(Medication, through="PrescribedMed")
 
+    def get_diagnoses(self):
+        # return self.diagnoses.all()
+        return "\n".join([d.name for d in self.diagnoses.all()])
+
+    get_diagnoses.short_description = 'Diagnoses'
+
+    def get_meds(self):
+        # return self.medications.all()
+        return "\n".join([m.name for m in self.medications.all()])
+
+    get_meds.short_description = 'Prescribed Meds'
+
+    def get_visits(self):
+
+        visits = Visit.objects.filter(outpatient=self.id)
+        print (visits)
+        strvisits = ""
+        for visit in visits:
+            print (visit.visit_date)
+            v = str(visit.visit_date)
+            print ("printing visit")
+            strvisits += v + ' '
+            print (strvisits)
+
+        return strvisits
 
     def __str__(self):
         return self.surname + ', ' + self.first_name
 
     class Meta:
-        db_table = 'newoutpatients'
+        db_table = 'outpatients'
 
 class EmergencyContact(models.Model):
     first_name = models.CharField(max_length=30)
@@ -229,7 +260,7 @@ class EmergencyContact(models.Model):
     )
     relationship = models.CharField(max_length=10, choices=RELATIONSHIP_CHOICES, blank=True)
     address = models.ForeignKey(Address, blank=True)
-    newoutpatient = models.ForeignKey(NewOutpatient)
+    outpatient = models.ForeignKey(Outpatient)
 
 
 
@@ -239,7 +270,7 @@ class EmergencyContact(models.Model):
 
 class PrescribedMed(models.Model):
     medication = models.ForeignKey(Medication, related_name='prescription')
-    newoutpatient = models.ForeignKey(NewOutpatient, related_name='prescription')
+    outpatient = models.ForeignKey(Outpatient, related_name='prescription')
     dosage_num = models.IntegerField()
     route = models.CharField(max_length=10)
     frequency = models.CharField(max_length=10)
@@ -257,7 +288,7 @@ class Visit(models.Model):
     patient_received_ed = models.BooleanField(default=False)
     lab_fee = models.FloatField(blank=True)
 
-    newoutpatient = models.ForeignKey(NewOutpatient)
+    outpatient = models.ForeignKey(Outpatient)
     doctor = models.ForeignKey(Doctor)
     facility = models.ForeignKey(Facility)
 
@@ -269,7 +300,7 @@ class Appointment(models.Model):
 
     facility = models.ForeignKey(Facility)
     doctor = models.ForeignKey(Doctor)
-    newoutpatient = models.ForeignKey(NewOutpatient)
+    outpatient = models.ForeignKey(Outpatient)
     department = models.ForeignKey(Department)
     visit = models.ForeignKey(Visit)
 
@@ -318,53 +349,3 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.comment
-
-
-
-#################################################################
-
-@python_2_unicode_compatible
-class Outpatient(models.Model):
-    visit_date = models.CharField(max_length=100, blank=True)
-    first_name = models.CharField('First Name', max_length=100, blank=True)
-    last_name = models.CharField(max_length=100)
-    age = models.CharField(max_length=50,blank=True)
-    gender = models.CharField(max_length=20, blank=True)
-    main_phone = models.BigIntegerField(null=True)
-    alt_phone = models.BigIntegerField(null=True, blank=True)
-    occupation = models.CharField(max_length=40, blank=True)
-    address = models.CharField(max_length=200, blank=True)
-    admitted = models.BooleanField(default=False)
-    doctors_name = models.CharField(max_length=200, blank=True)
-    doctors_note = models.TextField(null=True, blank=True)
-    appt_date = models.CharField(max_length=100, blank=True)
-    reminder_schedule_1_date = models.CharField(max_length=200, blank=True)
-    sign_consent_for_roi = models.BooleanField(default=False)
-    reason_for_not_signing_consent = models.CharField(max_length=300, blank=True)
-    name_of_center = models.CharField(max_length=100, blank=True)
-    patient_received_ed = models.BooleanField(default=False)
-    consultation_fee = models.CharField(max_length=50, blank=True)
-    admission_fee = models.IntegerField(blank=True, null=True)
-    lab_fee = models.IntegerField(blank=True, null=True)
-    medication_1 = models.CharField(max_length=100, blank=True)
-    medication_2 = models.CharField(max_length=100, blank=True)
-    medication_3 = models.CharField(max_length=100, blank=True)
-    medication_4 = models.CharField(max_length=100, blank=True)
-    medication_5 = models.CharField(max_length=100, blank=True)
-    medication_6 = models.CharField(max_length=100, blank=True)
-    medication_7 = models.CharField(max_length=100, blank=True)
-    message_sent = models.TextField(blank=True)
-    contacted_patient = models.BooleanField(default=False)
-    patient_showed_up = models.BooleanField(default=False)
-    comment = models.TextField(blank=True, null=True)
-    has_all_medications = models.BooleanField(default=False)
-    sent = models.BooleanField(default=False)
-    issues_with_taking_medication = models.BooleanField(default=False)
-    reminder_frequency = models.CharField(max_length=300, blank=True)
-    reminder_end_date = models.CharField(max_length=100, blank=True)
-    comments = models.TextField(blank=True)
-
-    def __str__(self):
-        return self.last_name
-
-###################################################################

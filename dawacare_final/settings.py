@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'apps.outpatients',
     'import_export',
     'debug_toolbar',
+    'nested_inline',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
