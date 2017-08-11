@@ -175,7 +175,7 @@ class Diagnosis(models.Model):
 class Medication(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
-    medication_category = models.ForeignKey(MedicationCategory)
+    medication_category = models.ForeignKey(MedicationCategory, blank=True, null=True)
 
     def __str__(self):
         return self.name
