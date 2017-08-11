@@ -1,41 +1,11 @@
 from django.contrib import admin
 from import_export.admin import ImportExportMixin
-from import_export.resources import ModelResource
 from django.contrib.contenttypes.admin import GenericStackedInline
 from apps.outpatients.models import *
 from apps.outpatients.forms import *
+from apps.outpatients.before_adminimportexport import *
 
 from nested_inline.admin import NestedStackedInline, NestedModelAdmin
-
-####For Import_Export
-class CountryResource(ModelResource):
-    class Meta:
-        model = Country
-
-class CityResource(ModelResource):
-    class Meta:
-        model = City
-
-class QuarterResource(ModelResource):
-    class Meta:
-        model = Quarter
-
-class CommentResource(ModelResource):
-    class Meta:
-        model = Outpatient
-
-class AppointmentResource(ModelResource):
-    class Meta:
-        model = Appointment
-
-class PrescribedMedResource(ModelResource):
-    class Meta:
-        model = PrescribedMed
-
-class AppointmentReminderResource(ModelResource):
-    class Meta:
-        model = AppointmentReminder
-
 
 
 
@@ -46,14 +16,13 @@ class CommentInline(GenericStackedInline):
     fk_name = "content_object"
     extra = 0
 
-class AppointmentAdmin(admin.ModelAdmin):
+class AppointmentAdmin(ImportExportMixin, admin.ModelAdmin):
+    resource_class = AppointmentResource
     inlines = [CommentInline]
 
-class PrescribedMedAdmin(admin.ModelAdmin):
+class PrescribedMedAdmin(ImportExportMixin, admin.ModelAdmin):
+    resource_class = PrescribedMedResource
     inlines = [CommentInline]
-
-
-
 
 class AppointmentReminderInline(NestedStackedInline):
     model = AppointmentReminder
@@ -82,8 +51,8 @@ class PrescribedMedInline(NestedStackedInline):
     extra = 1
     inlines = [MedicationReminderInline]
 
-class OutpatientAdmin(NestedModelAdmin):
-    model = Outpatient
+class OutpatientAdmin(ImportExportMixin, NestedModelAdmin):
+    resource_class = OutpatientResource
     extra = 1
     fk_name = 'Outpatient'
     inlines = [PrescribedMedInline, EmergencyContactInline, VisitInline]
@@ -96,25 +65,5 @@ class OutpatientAdmin(NestedModelAdmin):
 
 
 admin.site.register(Outpatient, OutpatientAdmin)
-admin.site.register(EmergencyContact)
-admin.site.register(MedicationCategory)
-admin.site.register(Medication)
 admin.site.register(PrescribedMed, PrescribedMedAdmin)
-admin.site.register(Diagnosis)
-admin.site.register(DiagnosisCategories)
-admin.site.register(Visit)
-admin.site.register(Allergy)
 admin.site.register(Appointment, AppointmentAdmin)
-admin.site.register(Facility)
-admin.site.register(Department)
-admin.site.register(Doctor)
-admin.site.register(Specialty)
-admin.site.register(Certification)
-admin.site.register(AppointmentReminder)
-admin.site.register(MedicationReminder)
-admin.site.register(Comment)
-admin.site.register(City)
-admin.site.register(Country)
-admin.site.register(Quarter)
-admin.site.register(Region)
-admin.site.register(District)

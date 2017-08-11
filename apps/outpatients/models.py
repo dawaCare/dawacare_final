@@ -309,10 +309,10 @@ class PrescribedMed(models.Model):
         db_table = 'prescribedmeds'
 
 class Visit(models.Model):
-    visit_date = models.DateTimeField(unique_for_date=True)
+    visit_date = models.DateTimeField()
     doctors_note = models.TextField(blank=True)
     patient_received_ed = models.BooleanField(default=False)
-    lab_fee = models.FloatField(blank=True)
+    lab_fee = models.FloatField(blank=True, null=True)
 
     outpatient = models.ForeignKey(Outpatient)
     doctor = models.ForeignKey(Doctor)
@@ -322,8 +322,6 @@ class Visit(models.Model):
     class Meta:
         db_table = 'visits'
 
-    def __str__(self):
-        return visit_date
 
 class Appointment(models.Model):
     appt_date = models.DateTimeField()
