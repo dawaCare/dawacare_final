@@ -1,10 +1,41 @@
 from django.contrib import admin
-from import_export.admin import ImportExportMixin, ImportMixin, ExportActionModelAdmin
+from import_export.admin import ImportExportMixin
 from import_export.resources import ModelResource
 from django.contrib.contenttypes.admin import GenericStackedInline
 from apps.outpatients.models import *
 
 from nested_inline.admin import NestedStackedInline, NestedModelAdmin
+
+####For Import_Export
+class CountryResource(ModelResource):
+    class Meta:
+        model = Country
+
+class CityResource(ModelResource):
+    class Meta:
+        model = City
+
+class QuarterResource(ModelResource):
+    class Meta:
+        model = Quarter
+
+class CommentResource(ModelResource):
+    class Meta:
+        model = Outpatient
+
+class AppointmentResource(ModelResource):
+    class Meta:
+        model = Appointment
+
+class PrescribedMedResource(ModelResource):
+    class Meta:
+        model = PrescribedMed
+
+class AppointmentReminderResource(ModelResource):
+    class Meta:
+        model = AppointmentReminder
+
+
 
 
 class CommentInline(GenericStackedInline):
@@ -55,7 +86,7 @@ class OutpatientAdmin(NestedModelAdmin):
     extra = 1
     fk_name = 'Outpatient'
     inlines = [PrescribedMedInline, EmergencyContactInline, VisitInline]
-    list_display = ('surname', 'first_name', 'date_of_birth', 'address', 'get_diagnoses', 'get_meds', 'get_visits')
+    list_display = ('surname', 'first_name', 'date_of_birth', 'address1', 'get_diagnoses', 'get_meds', 'get_visits')
     search_fields = ['surname', 'first_name']
 
 
@@ -77,7 +108,8 @@ admin.site.register(Certification)
 admin.site.register(AppointmentReminder)
 admin.site.register(MedicationReminder)
 admin.site.register(Comment)
-admin.site.register(Address)
 admin.site.register(City)
 admin.site.register(Country)
 admin.site.register(Quarter)
+admin.site.register(Region)
+admin.site.register(District)

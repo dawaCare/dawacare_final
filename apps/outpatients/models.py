@@ -49,19 +49,23 @@ class Quarter(models.Model):
     def __str__(self):
         return self.quarter
 
-class Address(models.Model):
-    address1 = models.CharField("Address Line 1", max_length=1024)
-    address2 = models.CharField("Address Line 2", max_length=1024, blank=True)
-    district = models.CharField(max_length=50, blank=True)
-    region = models.CharField(max_length=50, blank=True)
-    city = models.ForeignKey(City)
-    quarter = models.ForeignKey(Quarter)
-
-    def __str__(self):
-        return self.address1
+class District(models.Model):
+    district = models.CharField(max_length=70)
 
     class Meta:
-        db_table = 'addresses'
+        db_table = 'districts'
+
+    def __str__(self):
+        return self.district
+
+class Region(models.Model):
+    region = models.CharField(max_length=70)
+
+    class Meta:
+        db_table = 'regions'
+
+    def __str__(self):
+        return self.region
 
 
 
@@ -99,7 +103,12 @@ class Doctor(models.Model):
     last_name = models.CharField(max_length=50)
     main_phone = models.CharField(max_length=10)
     email = models.EmailField()
-    address = models.ForeignKey(Address)
+    address1 = models.CharField("Address Line 1", max_length=1024, blank=True)
+    address2 = models.CharField("Address Line 2", max_length=1024, blank=True)
+    district = models.ForeignKey(District, blank=True, null=True)
+    region = models.ForeignKey(Region, blank=True, null=True)
+    city = models.ForeignKey(City, blank=True, null=True)
+    quarter = models.ForeignKey(Quarter, blank=True, null=True)
 
     certifications = models.ManyToManyField(Certification)
     specialties = models.ManyToManyField(Specialty)
@@ -122,8 +131,12 @@ class Department(models.Model):
 class Facility(models.Model):
     name = models.CharField(max_length=50)
     phone = models.CharField(max_length=10, blank=True)
-    address = models.ForeignKey(Address, blank=True)
-    departments = models.ManyToManyField(Department, blank=True)
+    address1 = models.CharField("Address Line 1", max_length=1024, blank=True)
+    address2 = models.CharField("Address Line 2", max_length=1024, blank=True)
+    district = models.ForeignKey(District, blank=True, null=True)
+    region = models.ForeignKey(Region, blank=True, null=True)
+    city = models.ForeignKey(City, blank=True, null=True)
+    quarter = models.ForeignKey(Quarter, blank=True, null=True)
 
     class Meta:
         db_table = 'facilities'
@@ -197,7 +210,6 @@ class Outpatient(models.Model):
     main_phone = models.CharField(validators=[phone_regex], max_length=15)
     alt_phone = models.CharField(validators=[phone_regex], blank=True, max_length=15)
     occupation = models.CharField(max_length=30, blank=True)
-    address = models.ForeignKey(Address, blank=True, null=True)
     pregnant = models.BooleanField(default=False)
     signed_consent_for_roi = models.BooleanField(default=True)
     reason_for_not_signing_consent = models.TextField(blank=True)
@@ -206,6 +218,14 @@ class Outpatient(models.Model):
     consultation_fee = models.FloatField(blank=True, null=True)
     has_all_prescribed_medications = models.NullBooleanField()
     issues_with_taking_medication = models.NullBooleanField()
+
+    ##removing address abstraction
+    address1 = models.CharField("Address Line 1", max_length=1024, blank=True)
+    address2 = models.CharField("Address Line 2", max_length=1024, blank=True)
+    district = models.ForeignKey(District, blank=True, null=True)
+    region = models.ForeignKey(Region, blank=True, null=True)
+    city = models.ForeignKey(City, blank=True, null=True)
+    quarter = models.ForeignKey(Quarter, blank=True, null=True)
 
 
     diagnoses = models.ManyToManyField(Diagnosis, blank=True)
@@ -259,7 +279,14 @@ class EmergencyContact(models.Model):
         ('S', 'Son'),
     )
     relationship = models.CharField(max_length=10, choices=RELATIONSHIP_CHOICES, blank=True)
-    address = models.ForeignKey(Address, blank=True)
+    address1 = models.CharField("Address Line 1", max_length=1024, blank=True)
+    address2 = models.CharField("Address Line 2", max_length=1024, blank=True)
+    district = models.ForeignKey(District, blank=True, null=True)
+    region = models.ForeignKey(Region, blank=True, null=True)
+    city = models.ForeignKey(City, blank=True, null=True)
+    quarter = models.ForeignKey(Quarter, blank=True, null=True)
+
+
     outpatient = models.ForeignKey(Outpatient)
 
 
