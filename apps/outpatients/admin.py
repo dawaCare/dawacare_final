@@ -3,6 +3,7 @@ from import_export.admin import ImportExportMixin
 from import_export.resources import ModelResource
 from django.contrib.contenttypes.admin import GenericStackedInline
 from apps.outpatients.models import *
+from apps.outpatients.forms import *
 
 from nested_inline.admin import NestedStackedInline, NestedModelAdmin
 
@@ -88,6 +89,10 @@ class OutpatientAdmin(NestedModelAdmin):
     inlines = [PrescribedMedInline, EmergencyContactInline, VisitInline]
     list_display = ('surname', 'first_name', 'date_of_birth', 'address1', 'get_diagnoses', 'get_meds', 'get_visits')
     search_fields = ['surname', 'first_name']
+
+##For checking doctor uniqueness
+# class DoctorAdmin(admin.ModelAdmin):
+#     form = DoctorAdminForm
 
 
 admin.site.register(Outpatient, OutpatientAdmin)

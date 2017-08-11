@@ -22,7 +22,7 @@ phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number mus
 
 
 class Country(models.Model):
-    country = models.CharField(max_length=70)
+    country = models.CharField(max_length=70, unique=True)
 
     class Meta:
         db_table = 'countries'
@@ -31,7 +31,7 @@ class Country(models.Model):
         return self.country
 
 class City(models.Model):
-    city = models.CharField(max_length=70)
+    city = models.CharField(max_length=70, unique=True)
     country = models.ForeignKey(Country)
     # updated_at = models.DateTimeField()
 
@@ -42,7 +42,7 @@ class City(models.Model):
         return self.city
 
 class Quarter(models.Model):
-    quarter = models.CharField(max_length=70)
+    quarter = models.CharField(max_length=70, unique=True)
 
     class Meta:
         db_table = 'quarters'
@@ -51,7 +51,7 @@ class Quarter(models.Model):
         return self.quarter
 
 class District(models.Model):
-    district = models.CharField(max_length=70)
+    district = models.CharField(max_length=70, unique=True)
 
     class Meta:
         db_table = 'districts'
@@ -60,7 +60,7 @@ class District(models.Model):
         return self.district
 
 class Region(models.Model):
-    region = models.CharField(max_length=70)
+    region = models.CharField(max_length=70, unique=True)
 
     class Meta:
         db_table = 'regions'
@@ -88,16 +88,22 @@ class Region(models.Model):
 
 
 class Specialty(models.Model):
-    description = models.CharField(max_length=100)
+    description = models.CharField(max_length=100, unique=True)
 
     class Meta:
         db_table = 'specialties'
 
+    def __str__(self):
+        return self.description
+
 class Certification(models.Model):
-    description = models.CharField(max_length=100)
+    description = models.CharField(max_length=100, unique=True)
 
     class Meta:
         db_table = 'certifications'
+
+    def __str__(self):
+        return self.description
 
 class Doctor(models.Model):
     first_name = models.CharField(max_length=50)
@@ -122,7 +128,7 @@ class Doctor(models.Model):
         return self.last_name
 
 class Department(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
 
     class Meta:
         db_table = 'departments'
@@ -131,7 +137,7 @@ class Department(models.Model):
         return self.name
 
 class Facility(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     main_phone = models.CharField(validators=[phone_regex], max_length=15)
     alt_phone = models.CharField(validators=[phone_regex], blank=True, max_length=15)
     address1 = models.CharField("Address Line 1", max_length=1024, blank=True)
@@ -148,7 +154,7 @@ class Facility(models.Model):
         return self.name
 
 class Allergy(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     description = models.TextField()
 
     def __str__(self):
@@ -158,7 +164,7 @@ class Allergy(models.Model):
         db_table = 'allergies'
 
 class MedicationCategory(models.Model):
-    category = models.CharField(max_length=50)
+    category = models.CharField(max_length=50, unique=True)
 
     class Meta:
         db_table = 'medication_categories'
@@ -168,7 +174,7 @@ class MedicationCategory(models.Model):
 
 
 class DiagnosisCategories(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
 
     class Meta:
         db_table = 'diagnosis_categories'
@@ -177,7 +183,7 @@ class DiagnosisCategories(models.Model):
         return self.name
 
 class Diagnosis(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     description = models.TextField()
     category = models.ForeignKey(DiagnosisCategories)
 
@@ -189,7 +195,7 @@ class Diagnosis(models.Model):
 
 
 class Medication(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
     medication_category = models.ForeignKey(MedicationCategory, blank=True, null=True)
 
@@ -215,7 +221,7 @@ class Outpatient(models.Model):
     occupation = models.CharField(max_length=30, blank=True)
     pregnant = models.BooleanField(default=False)
     signed_consent_for_roi = models.BooleanField(default=True)
-    reason_for_not_signing_consent = models.TextField(blank=True)
+    reason_for_not_signing_consent = models.CharField(max_length=255, blank=True)
     admitted = models.NullBooleanField()
     admission_fee = models.IntegerField(blank=True, null=True)
     consultation_fee = models.FloatField(blank=True, null=True)
@@ -272,15 +278,6 @@ class EmergencyContact(models.Model):
     last_name = models.CharField(max_length=30)
     main_phone = models.CharField(validators=[phone_regex], max_length=15)
     alt_phone = models.CharField(validators=[phone_regex], blank=True, max_length=15)
-    # RELATIONSHIP_CHOICES = (
-    #     ('Sib', 'Sibling'),
-    #     ('M', 'Mother'),
-    #     ('F', 'Father'),
-    #     ('C', 'Cousin'),
-    #     ('F', 'Friend'),
-    #     ('D', 'Daughter'),
-    #     ('S', 'Son'),
-    # )
     relationship = models.CharField(max_length=10, choices=choices.RELATIONSHIP_CHOICES, blank=True)
     address1 = models.CharField("Address Line 1", max_length=1024, blank=True)
     address2 = models.CharField("Address Line 2", max_length=1024, blank=True)
@@ -312,7 +309,7 @@ class PrescribedMed(models.Model):
         db_table = 'prescribedmeds'
 
 class Visit(models.Model):
-    visit_date = models.DateTimeField()
+    visit_date = models.DateTimeField(unique_for_date=True)
     doctors_note = models.TextField(blank=True)
     patient_received_ed = models.BooleanField(default=False)
     lab_fee = models.FloatField(blank=True)
@@ -324,6 +321,9 @@ class Visit(models.Model):
 
     class Meta:
         db_table = 'visits'
+
+    def __str__(self):
+        return visit_date
 
 class Appointment(models.Model):
     appt_date = models.DateTimeField()

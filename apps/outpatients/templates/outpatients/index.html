@@ -13,6 +13,7 @@
       <tr>
         <th>Date</th>
         <th>Outpatient Name</th>
+        <th>Phone Number</th>
         <th>Medication Title</th>
         <th>Dosage</th>
         <th>Frequency</th>
@@ -24,7 +25,8 @@
       {% for todo in med_todos %}
       <tr>
         <td>{{todo.date}}</td>
-        <td>{{todo.prescribed_med.outpatient.first_name}}</td>
+        <td>{{todo.prescribed_med.outpatient.first_name}} + {{todo.prescribed_med.outpatient.last_name}}</td>
+        <td>{{todo.prescribed_med.outpatient.main_phone}}</td>
         <td>{{todo.prescribed_med.medication.name}}</td>
         <td>{{todo.prescribed_med.dosage_num}} {{todo.prescribed_med.dosage_unit}}</td>
         <td>{{todo.prescribed_med.frequency}}</td>
@@ -70,6 +72,7 @@
     <tr>
       <th>Reminder Date</th>
       <th>Outpatient</th>
+      <th>Phone Number</th>
       <th>Appointment Date</th>
       <th>Facility</th>
       <th>Doctor</th>
@@ -85,6 +88,7 @@
     <tr>
       <td>{{todo.date}}</td>
       <td>{{todo.appt_date.outpatient.first_name}} {{todo.appt_date.outpatient.last_name}}</td>
+      <td>{{todo.appt_date.outpatient.main_phone}}</td>
       <td>{{todo.appt_date.appt_date}}</td>
       <td>{{todo.appt_date.facility.name}}</td>
       <td>{{todo.appt_date.doctor.first_name}} {{todo.appt_date.doctor.last_name}}</td>
