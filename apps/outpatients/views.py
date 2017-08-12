@@ -96,9 +96,9 @@ class FollowedUp(View):
         print (request.POST)
 
         appt_rem = AppointmentReminder.objects.get(id=request.POST['appt_id'])
+        appt = appt_rem.appt_date
 
-        appt_rem.followed_up = "True"
-        print ("Follow up?" + appt_rem.followed_up)
+        appt.followed_up = True
 
-        appt_rem.save()
+        appt.save()
         return redirect('/')
