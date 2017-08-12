@@ -13,7 +13,6 @@ class Todo(View):
         print(MedicationReminder.objects.all())
         print(AppointmentReminder.objects.all())
         # med_todos = MedicationReminder.objects.get(user=request.user.id)
-        # print(med_todos)
         med_todos = MedicationReminder.objects.filter(pcc=request.user.id).order_by('date')
         appt_todos = AppointmentReminder.objects.filter(pcc=request.user.id).order_by('date')
         context = {

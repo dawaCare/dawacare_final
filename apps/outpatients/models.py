@@ -342,7 +342,7 @@ class Appointment(models.Model):
 
 class MedicationReminder(models.Model):
     prescribed_med = models.ForeignKey(PrescribedMed)
-    pcc = models.ForeignKey(User, null=True)
+    pcc = models.ManyToManyField(User)
 
     contacted_patient = models.BooleanField(default=False)
     sent = models.BooleanField(default=False)
@@ -355,7 +355,7 @@ class MedicationReminder(models.Model):
 
 class AppointmentReminder(models.Model):
     appt_date = models.ForeignKey(Appointment)
-    pcc = models.ForeignKey(User)
+    pcc = models.ManyToManyField(User)
 
     contacted_patient = models.BooleanField(default=False)
     sent = models.BooleanField(default=False)
