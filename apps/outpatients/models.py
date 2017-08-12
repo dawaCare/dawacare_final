@@ -298,8 +298,8 @@ class EmergencyContact(models.Model):
 class PrescribedMed(models.Model):
     medication = models.ForeignKey(Medication, related_name='prescription')
     outpatient = models.ForeignKey(Outpatient, related_name='prescription')
-    route = models.CharField(max_length=10, choices=choices.ROUTES_CHOICES)
-    frequency = models.CharField(max_length=10, choices=choices.FREQUENCY_CHOICES)
+    route = models.CharField(max_length=5, choices=choices.ROUTES_CHOICES)
+    frequency = models.CharField(max_length=15, choices=choices.FREQUENCY_CHOICES)
     dosage = models.CharField(max_length=10)
     end_date = models.DateField(null=True)
 
