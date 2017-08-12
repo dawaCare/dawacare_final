@@ -5,9 +5,17 @@ from apps.outpatients.models import *
 from apps.outpatients.forms import *
 from apps.outpatients.before_adminimportexport import *
 
+from django.contrib.admin import AdminSite
+from django.utils.translation import ugettext_lazy
+
 from nested_inline.admin import NestedStackedInline, NestedModelAdmin
 
+class dawaCareSite(AdminSite):
+    site_title = ugettext_lazy('dawaCare Admin')
+    site_header = ugettext_lazy('dawaCare')
+    index_title = ugettext_lazy('dawaCare Administration')
 
+admin_site = dawaCareSite
 
 class CommentInline(GenericStackedInline):
     model = Comment

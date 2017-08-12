@@ -17,10 +17,18 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
 
+admin.site.site_header = "dawaCare Admin"
+admin.site.title = "dawaCare Admin"
+admin.site.index_title = "dawaCare Administration"
+
+
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('apps.outpatients.urls')),
 ]
+
+
 
 if settings.DEBUG:
     import debug_toolbar
