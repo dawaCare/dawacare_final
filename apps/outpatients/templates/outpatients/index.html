@@ -25,12 +25,12 @@
       {% for todo in med_todos %}
       <tr>
         <td>{{todo.date}}</td>
-        <td>{{todo.prescribed_med.outpatient.first_name}} + {{todo.prescribed_med.outpatient.last_name}}</td>
+        <td>{{todo.prescribed_med.outpatient.first_name}} + {{todo.prescribed_med.outpatient.surname}}</td>
         <td>{{todo.prescribed_med.outpatient.main_phone}}</td>
         <td>{{todo.prescribed_med.medication.name}}</td>
-        <td>{{todo.prescribed_med.dosage_num}} {{todo.prescribed_med.dosage_unit}}</td>
+        <td>{{todo.prescribed_med.dosage}}</td>
         <td>{{todo.prescribed_med.frequency}}</td>
-        <td>{{todo.end_date}}</td>
+        <td>{{todo.prescribed_med.end_date}}</td>
         <td>
           <form action="{% url 'contacted_patient_med' %}" method="POST">
             {% csrf_token %}
@@ -87,8 +87,8 @@
     {% for todo in appt_todos %}
     <tr>
       <td>{{todo.date}}</td>
-      <td>{{todo.appt_date.outpatient.first_name}} {{todo.appt_date.outpatient.last_name}}</td>
-      <td>{{todo.appt_date.outpatient.main_phone}}</td>
+      <td>{{todo.appt_date.visit.outpatient.first_name}} {{todo.appt_date.visit.outpatient.surname}}</td>
+      <td>{{todo.appt_date.visit.outpatient.main_phone}}</td>
       <td>{{todo.appt_date.appt_date}}</td>
       <td>{{todo.appt_date.facility.name}}</td>
       <td>{{todo.appt_date.doctor.first_name}} {{todo.appt_date.doctor.last_name}}</td>
