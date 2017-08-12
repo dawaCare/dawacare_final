@@ -26,6 +26,7 @@ class Country(models.Model):
 
     class Meta:
         db_table = 'countries'
+        verbose_name_plural = 'countries'
 
     def __str__(self):
         return self.country
@@ -37,6 +38,7 @@ class City(models.Model):
 
     class Meta:
         db_table = 'cities'
+        verbose_name_plural = 'cities'
 
     def __str__(self):
         return self.city
@@ -46,6 +48,7 @@ class Quarter(models.Model):
 
     class Meta:
         db_table = 'quarters'
+        verbose_name_plural = 'quarters'
 
     def __str__(self):
         return self.quarter
@@ -92,6 +95,7 @@ class Specialty(models.Model):
 
     class Meta:
         db_table = 'specialties'
+        verbose_name_plural = 'specialties'
 
     def __str__(self):
         return self.description
@@ -101,6 +105,7 @@ class Certification(models.Model):
 
     class Meta:
         db_table = 'certifications'
+        verbose_name_plural = 'certifications'
 
     def __str__(self):
         return self.description
@@ -149,6 +154,7 @@ class Facility(models.Model):
 
     class Meta:
         db_table = 'facilities'
+        verbose_name_plural = 'facilities'
 
     def __str__(self):
         return self.name
@@ -162,12 +168,14 @@ class Allergy(models.Model):
 
     class Meta:
         db_table = 'allergies'
+        verbose_name_plural = 'allergies'
 
 class MedicationCategory(models.Model):
     category = models.CharField(max_length=50, unique=True)
 
     class Meta:
         db_table = 'medication_categories'
+        verbose_name_plural = 'Medication Categories'
 
     def __str__(self):
         return self.category
@@ -178,6 +186,7 @@ class DiagnosisCategories(models.Model):
 
     class Meta:
         db_table = 'diagnosis_categories'
+        verbose_name_plural = 'Diagnosis Categories'
 
     def __str__(self):
         return self.name
@@ -192,6 +201,7 @@ class Diagnosis(models.Model):
 
     class Meta:
         db_table = 'diagnoses'
+        verbose_name_plural = 'Diagnoses'
 
 
 class Medication(models.Model):
@@ -204,6 +214,7 @@ class Medication(models.Model):
 
     class Meta:
         db_table = 'medications'
+        verbose_name_plural = 'Medications'
 
 
 class Outpatient(models.Model):
@@ -293,6 +304,7 @@ class EmergencyContact(models.Model):
 
     class Meta:
         db_table = 'emergency_contacts'
+        verbose_name_plural = 'Emergency Contacts'
 
 
 class PrescribedMed(models.Model):
@@ -307,6 +319,7 @@ class PrescribedMed(models.Model):
 
     class Meta:
         db_table = 'prescribedmeds'
+        verbose_name_plural = 'Prescribed Medications'
 
 class Visit(models.Model):
     visit_date = models.DateTimeField()
@@ -321,6 +334,7 @@ class Visit(models.Model):
 
     class Meta:
         db_table = 'visits'
+        verbose_name_plural = 'Visits'
 
 
 class Appointment(models.Model):
@@ -352,6 +366,7 @@ class MedicationReminder(models.Model):
 
     class Meta:
         db_table = 'med_reminders'
+        verbose_name_plural = 'Medication Reminders'
 
 class AppointmentReminder(models.Model):
     appt_date = models.ForeignKey(Appointment)
@@ -366,6 +381,7 @@ class AppointmentReminder(models.Model):
 
     class Meta:
         db_table = 'appt_reminders'
+        verbose_name_plural = 'Appointment Reminders'
 
 
 class Comment(models.Model):
