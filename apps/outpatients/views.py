@@ -5,9 +5,15 @@ from django.shortcuts import render, redirect
 from django.views.generic import View
 from apps.outpatients.models import *
 from django.contrib.auth.models import User
+
+
+
 # Create your views here.
 
+
+
 class Todo(View):
+
     def get(self, request):
         print(request.user.id)
         print(MedicationReminder.objects.all())
@@ -22,6 +28,7 @@ class Todo(View):
         return render(request, 'outpatients/index.html', context)
 
 class AppointmentContact(View):
+
     def post(self, request):
         print (request.POST)
         appt_rem = AppointmentReminder.objects.get(id=request.POST['appt_id'])
@@ -33,6 +40,7 @@ class AppointmentContact(View):
         return redirect('/')
 
 class MedicationContact(View):
+
     def post(self, request):
 
         med_rem = MedicationReminder.objects.get(id=request.POST['med_id'])
@@ -44,6 +52,7 @@ class MedicationContact(View):
         return redirect('/')
 
 class SentMed(View):
+
     def post(self, request):
         print (request.POST)
 
@@ -54,8 +63,8 @@ class SentMed(View):
         med_rem.save()
         return redirect('/')
 
-
 class SentAppt(View):
+
     def post(self, request):
         print (request.POST)
 
@@ -67,6 +76,7 @@ class SentAppt(View):
         return redirect('/')
 
 class MessageMed(View):
+
     def post(self, request):
         print (request.POST)
 
@@ -80,6 +90,7 @@ class MessageMed(View):
         return redirect('/')
 
 class MessageAppt(View):
+
     def post(self, request):
         print(request.POST)
 
@@ -91,6 +102,7 @@ class MessageAppt(View):
         return redirect('/')
 
 class FollowedUp(View):
+
     def post(self, request):
         print (request.POST)
 
