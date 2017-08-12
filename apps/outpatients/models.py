@@ -328,7 +328,8 @@ class Appointment(models.Model):
 
     facility = models.ForeignKey(Facility)
     doctor = models.ForeignKey(Doctor)
-    outpatient = models.ForeignKey(Outpatient)
+    ##Now you have to reference the outpatient from the visit that the appt instance is attached to
+    # outpatient = models.ForeignKey(Outpatient)
     department = models.ForeignKey(Department)
     visit = models.ForeignKey(Visit)
 
