@@ -27,7 +27,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'dawa-staging.herokuapp.com', 'dawa-prod.herokuapp.com']
+ALLOWED_HOSTS = ['localhost', 'dawa-staging.herokuapp.com', 'dawa-prod.herokuapp.com', 'dawa-demo.herokuapp.com']
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'import_export',
     'debug_toolbar',
     'nested_inline',
+    'jet.dashboard',
     'jet',
     'django.contrib.admin',
     'django.contrib.auth',
