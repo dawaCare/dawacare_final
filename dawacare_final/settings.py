@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'apps.outpatients',
     'import_export',
     'debug_toolbar',
+    'nested_inline',
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -150,3 +152,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(PROJECT_ROOT, 'static'),
 )
+
+LOGIN_URL = '/admin/'

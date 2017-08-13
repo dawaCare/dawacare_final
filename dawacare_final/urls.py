@@ -17,9 +17,20 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
 
+admin.site.site_header = "dawaCare Admin"
+admin.site.title = "dawaCare Admin"
+admin.site.index_title = "dawaCare Administration"
+
+
+
 urlpatterns = [
+    url(r'^jet/', include('jet.urls', 'jet')),  # Django JET URLS
+    url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),  # Django JET dashboard URLS
     url(r'^admin/', admin.site.urls),
+    url(r'^', include('apps.outpatients.urls')),
 ]
+
+
 
 if settings.DEBUG:
     import debug_toolbar

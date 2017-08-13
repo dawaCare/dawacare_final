@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+
+
+  <h1>Medication Todos</h1>
+    <table style="width:100%" border="1">
+      <tr>
+        <th>Date</th>
+        <th>Outpatient Name</th>
+        <th>Phone Number</th>
+        <th>Medication Title</th>
+        <th>Dosage</th>
+        <th>Frequency</th>
+        <th>End Date</th>
+        <th>Contacted Patient?</th>
+        <th>Sent?</th>
+        <th>Patient Feedback</th>
+      </tr>
+      {% for todo in med_todos %}
+      <tr>
+        <td>{{todo.date}}</td>
+        <td>{{todo.prescribed_med.outpatient.first_name}} + {{todo.prescribed_med.outpatient.surname}}</td>
+        <td>{{todo.prescribed_med.outpatient.main_phone}}</td>
+        <td>{{todo.prescribed_med.medication.name}}</td>
+        <td>{{todo.prescribed_med.dosage}}</td>
+        <td>{{todo.prescribed_med.frequency}}</td>
+        <td>{{todo.prescribed_med.end_date}}</td>
+        <td>
+          <form action="{% url 'contacted_patient_med' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="med_id" value="{{ todo.id }}">
+            {% if not todo.contacted_patient %}
+            <input type="submit" value="OK">
+            {% else %}
+            <p>Contacted!</p>
+            {% endif %}
+          </form>
+        </td>
+
+        <td>
+          <form action="{% url 'sent_med' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="med_id" value="{{ todo.id }}">
+            {% if not todo.sent %}
+            <input type="submit" value="Sent!">
+            {% else %}
+            <p>Sent!</p>
+            {% endif %}
+          </form>
+        </td>
+        <td>
+          <form action="{% url 'message_med' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="med_id" value="{{todo.id}}">
+            <textarea name="med_message" id="" cols="30" rows="10">{{todo.message}}</textarea>
+            <input type="submit" value="Submit">
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+
+
+  <h1>Appointment Todos</h1>
+  <table style="width:100%" border="1">
+    <tr>
+      <th>Reminder Date</th>
+      <th>Outpatient</th>
+      <th>Phone Number</th>
+      <th>Appointment Date</th>
+      <th>Facility</th>
+      <th>Doctor</th>
+      <th>Department</th>
+      <th>Date of Visit</th>
+      <th>Contacted Patient?</th>
+      <th>Sent?</th>
+      <th>Message</th>
+      <th>Followed Up?</th>
+
+    </tr>
+    {% for todo in appt_todos %}
+    <tr>
+      <td>{{todo.date}}</td>
+      <td>{{todo.appt_date.visit.outpatient.first_name}} {{todo.appt_date.visit.outpatient.surname}}</td>
+      <td>{{todo.appt_date.visit.outpatient.main_phone}}</td>
+      <td>{{todo.appt_date.appt_date}}</td>
+      <td>{{todo.appt_date.facility.name}}</td>
+      <td>{{todo.appt_date.doctor.first_name}} {{todo.appt_date.doctor.last_name}}</td>
+      <td>{{todo.appt_date.department.name}}</td>
+      <td>{{todo.appt_date.visit.visit_date}}</td>
+      <td>
+        <form action="{% url 'contacted_patient_appt' %}" method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="appt_id" value="{{ todo.id }}">
+          {% if not todo.contacted_patient  %}
+          <input type="submit" value="OK">
+          {% else %}
+          <p>Contacted!</p>
+          {% endif %}
+        </form>
+      </td>
+
+      <td>
+        <form action="{% url 'sent_appt' %}" method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="appt_id" value="{{ todo.id }}">
+          {% if not todo.sent %}
+          <input type="submit" value="Sent!">
+          {% else %}
+          <p>Sent!</p>
+          {% endif %}
+        </form>
+      </td>
+      <td>
+        <form action="{% url 'message_appt' %}" method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="appt_id" value="{{todo.id}}">
+          <textarea name="appt_message" id="" cols="30" rows="10">{{todo.message}}</textarea>
+          <input type="submit" value="Submit">
+        </form>
+      </td>
+      <td>
+
+        <form action="{% url 'followed_up' %}" method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="appt_id" value="{{todo.id}}">
+          {% if not todo.appt_date.followed_up %}
+          <input type="submit" value="Followed Up?">
+          {% else %}
+          <p>Followed Up!</p>
+          {% endif %}
+        </form>
+      </td>
+
+    </tr>
+    {% endfor %}
+  </table>
+
+
+</body>
+</html>
