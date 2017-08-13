@@ -1,4 +1,5 @@
 RELATIONSHIP_CHOICES = (
+    ('N/A', 'N/A'),
     ('Sib', 'Sibling'),
     ('M', 'Mother'),
     ('F', 'Father'),
@@ -9,6 +10,7 @@ RELATIONSHIP_CHOICES = (
 )
 
 ROUTES_CHOICES = (
+    ('N/A', 'N/A'),
     ('AAA', 'AAA (Apply to Affected Area)'),
     ('AD', 'AD (Right ear)'),
     ('AS', 'AS (Left ear)'),
@@ -30,6 +32,7 @@ ROUTES_CHOICES = (
 )
 
 FREQUENCY_CHOICES = (
+    ('N/A', 'N/A'),
     ('ac', 'ac (before meals)'),
     ('achs', 'achs (before meals and at bedtime)'),
     ('alt. h.', 'alt. h. (every other hour)'),
