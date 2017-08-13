@@ -36,6 +36,11 @@ class VisitInline(NestedStackedInline):
     extra = 1
     inlines = [AppointmentInline]
 
+    def get_queryset(self, request):
+        qs = super(VisitInline, self).get_queryset(request)
+        # qs.order_by('-created_at')
+        return qs
+
 class EmergencyContactInline(NestedStackedInline):
     model = EmergencyContact
     extra = 1
@@ -56,6 +61,8 @@ class OutpatientAdmin(ImportExportMixin, NestedModelAdmin):
     inlines = [PrescribedMedInline, EmergencyContactInline, VisitInline]
     list_display = ('surname', 'first_name', 'date_of_birth', 'address1', 'get_diagnoses', 'get_meds', 'get_visits')
     search_fields = ['surname', 'first_name']
+    # list_filter = ['surname']
+    # list_display_links = ['get_diagnoses', 'surname']
 
 ##For checking doctor uniqueness
 # class DoctorAdmin(admin.ModelAdmin):

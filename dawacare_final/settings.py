@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'import_export',
     'debug_toolbar',
     'nested_inline',
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
