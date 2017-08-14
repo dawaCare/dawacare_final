@@ -27,6 +27,7 @@ class Country(models.Model):
     class Meta:
         db_table = 'countries'
         verbose_name_plural = 'countries'
+        ordering = ['country']
 
     def __str__(self):
         return self.country
@@ -39,6 +40,7 @@ class City(models.Model):
     class Meta:
         db_table = 'cities'
         verbose_name_plural = 'cities'
+        ordering = ['city']
 
     def __str__(self):
         return self.city
@@ -49,6 +51,7 @@ class Quarter(models.Model):
     class Meta:
         db_table = 'quarters'
         verbose_name_plural = 'quarters'
+        ordering = ['quarter']
 
     def __str__(self):
         return self.quarter
@@ -58,6 +61,7 @@ class District(models.Model):
 
     class Meta:
         db_table = 'districts'
+        ordering = ['district']
 
     def __str__(self):
         return self.district
@@ -67,6 +71,7 @@ class Region(models.Model):
 
     class Meta:
         db_table = 'regions'
+        ordering = ['region']
 
     def __str__(self):
         return self.region
@@ -96,6 +101,7 @@ class Specialty(models.Model):
     class Meta:
         db_table = 'specialties'
         verbose_name_plural = 'specialties'
+        ordering = ['description']
 
     def __str__(self):
         return self.description
@@ -106,6 +112,7 @@ class Certification(models.Model):
     class Meta:
         db_table = 'certifications'
         verbose_name_plural = 'certifications'
+        ordering = ['description']
 
     def __str__(self):
         return self.description
@@ -128,6 +135,7 @@ class Doctor(models.Model):
 
     class Meta:
         db_table = 'doctors'
+        ordering = ['last_name']
 
     def __str__(self):
         return self.last_name
@@ -137,6 +145,7 @@ class Department(models.Model):
 
     class Meta:
         db_table = 'departments'
+        ordering = ['name']
 
     def __str__(self):
         return self.name
@@ -155,6 +164,7 @@ class Facility(models.Model):
     class Meta:
         db_table = 'facilities'
         verbose_name_plural = 'facilities'
+        ordering = ['name']
 
     def __str__(self):
         return self.name
@@ -169,6 +179,7 @@ class Allergy(models.Model):
     class Meta:
         db_table = 'allergies'
         verbose_name_plural = 'allergies'
+        ordering = ['name']
 
 class MedicationCategory(models.Model):
     category = models.CharField(max_length=50, unique=True)
@@ -176,6 +187,7 @@ class MedicationCategory(models.Model):
     class Meta:
         db_table = 'medication_categories'
         verbose_name_plural = 'Medication Categories'
+        ordering = ['category']
 
     def __str__(self):
         return self.category
@@ -187,6 +199,7 @@ class DiagnosisCategories(models.Model):
     class Meta:
         db_table = 'diagnosis_categories'
         verbose_name_plural = 'Diagnosis Categories'
+        ordering = ['name']
 
     def __str__(self):
         return self.name
@@ -202,6 +215,7 @@ class Diagnosis(models.Model):
     class Meta:
         db_table = 'diagnoses'
         verbose_name_plural = 'Diagnoses'
+        ordering = ['name']
 
 
 class Medication(models.Model):
@@ -284,6 +298,7 @@ class Outpatient(models.Model):
 
     class Meta:
         db_table = 'outpatients'
+        ordering = ['surname']
 
 class EmergencyContact(models.Model):
     first_name = models.CharField(max_length=30)
