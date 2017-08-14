@@ -215,6 +215,7 @@ class Medication(models.Model):
     class Meta:
         db_table = 'medications'
         verbose_name_plural = 'Medications'
+        ordering = ['name']
 
 
 class Outpatient(models.Model):
