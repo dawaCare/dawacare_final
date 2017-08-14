@@ -12,12 +12,6 @@ __pycache__/
 # C extensions
 *.so
 
-db.sqlite3
-uwsgi.ini
-
-media/**
-!media/**/init.txt
-
 # Distribution / packaging
 .Python
 build/
