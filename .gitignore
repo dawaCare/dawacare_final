@@ -12,11 +12,6 @@ __pycache__/
 # C extensions
 *.so
 
-**/migrations/**
-!**/migrations
-!**/migrations/__init__.py
-
-
 db.sqlite3
 uwsgi.ini
 
