@@ -47,6 +47,7 @@ class MedicationReminderInline(NestedStackedInline):
 class PrescribedMedInline(NestedStackedInline):
     model = PrescribedMed
     extra = 1
+    raw_id_fields=('medication',)
     inlines = [MedicationReminderInline]
 
 class OutpatientAdmin(ImportExportMixin, NestedModelAdmin):
@@ -56,6 +57,7 @@ class OutpatientAdmin(ImportExportMixin, NestedModelAdmin):
     inlines = [PrescribedMedInline, EmergencyContactInline, VisitInline]
     list_display = ('surname', 'first_name', 'date_of_birth', 'address1', 'get_diagnoses', 'get_meds', 'get_visits')
     search_fields = ['surname', 'first_name']
+
 
 ##For checking doctor uniqueness
 # class DoctorAdmin(admin.ModelAdmin):
